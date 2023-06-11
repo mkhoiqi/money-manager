@@ -37,15 +37,17 @@ public class CategoryServiceImpl implements CategoryService {
         validationService.validate(request);
 
         if(!request.getType().equalsIgnoreCase("expense") && !request.getType().equalsIgnoreCase("income")){
-            List<String> messages = new ArrayList<>();
-            messages.add("must be 'expense' or 'income'");
-            throw new CustomException(HttpStatus.BAD_REQUEST, "type", messages);
+//            List<String> messages = new ArrayList<>();
+//            messages.add("must be 'expense' or 'income'");
+//            throw new CustomException(HttpStatus.BAD_REQUEST, "type", messages);
+            throw new CustomException(HttpStatus.BAD_REQUEST, "type", "must be 'expense' or 'income'");
         }
 
         if(categoryRepository.existsByUserAndTypeAndName(user, request.getType(), request.getName())){
-            List<String> messages = new ArrayList<>();
-            messages.add("already exists");
-            throw new CustomException(HttpStatus.BAD_REQUEST, "name", messages);
+//            List<String> messages = new ArrayList<>();
+//            messages.add("already exists");
+//            throw new CustomException(HttpStatus.BAD_REQUEST, "name", messages);
+            throw new CustomException(HttpStatus.BAD_REQUEST, "name", "already exists");
         }
 
         Category category = new Category();
@@ -71,15 +73,17 @@ public class CategoryServiceImpl implements CategoryService {
         validationService.validate(request);
 
         if(!request.getType().equalsIgnoreCase("expense") && !request.getType().equalsIgnoreCase("income")){
-            List<String> messages = new ArrayList<>();
-            messages.add("must be 'expense' or 'income'");
-            throw new CustomException(HttpStatus.BAD_REQUEST, "type", messages);
+//            List<String> messages = new ArrayList<>();
+//            messages.add("must be 'expense' or 'income'");
+//            throw new CustomException(HttpStatus.BAD_REQUEST, "type", messages);
+            throw new CustomException(HttpStatus.BAD_REQUEST, "type", "must be 'expense' or 'income'");
         }
 
         if(categoryRepository.existsByUserAndTypeAndNameAndIdNot(user, request.getType(), request.getName(), id)){
-            List<String> messages = new ArrayList<>();
-            messages.add("already exists");
-            throw new CustomException(HttpStatus.BAD_REQUEST, "name", messages);
+//            List<String> messages = new ArrayList<>();
+//            messages.add("already exists");
+//            throw new CustomException(HttpStatus.BAD_REQUEST, "name", messages);
+            throw new CustomException(HttpStatus.BAD_REQUEST, "name", "already exists");
         }
 
         category.setName(request.getName());
@@ -92,6 +96,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryArchiveResponse archive(User user, String id) {
         Category category = categoryRepository.findFirstByIdAndUserAndDeletedAtIsNull(id, user)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
@@ -105,6 +110,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryArchiveResponse unarchive(User user, String id) {
         Category category = categoryRepository.findFirstByIdAndUserAndDeletedAtIsNotNull(id, user)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
@@ -116,6 +122,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CategoryCreateResponse> getAllPublished(User user) {
         List<Category> categories = categoryRepository.findAllByUserAndDeletedAtIsNull(user);
 
@@ -129,6 +136,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CategoryCreateResponse getPublished(User user, String id) {
         Category category = categoryRepository.findFirstByIdAndUserAndDeletedAtIsNull(id, user)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Published Category not found"));
@@ -136,6 +144,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CategoryCreateResponse> getAllArchived(User user) {
         List<Category> categories = categoryRepository.findAllByUserAndDeletedAtIsNotNull(user);
 
@@ -149,6 +158,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CategoryCreateResponse getArchived(User user, String id) {
         Category category = categoryRepository.findFirstByIdAndUserAndDeletedAtIsNotNull(id, user)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Archived Category not found"));

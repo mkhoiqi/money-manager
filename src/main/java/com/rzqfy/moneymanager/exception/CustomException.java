@@ -11,5 +11,6 @@ import java.util.List;
 public class CustomException extends RuntimeException{
     private final HttpStatus status;
     private final String field;
-    private final List<String> messages;
+//    private final List<String> messages;
+    private final String message;
 }

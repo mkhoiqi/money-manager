@@ -40,9 +40,10 @@ public class GroupServiceImpl implements GroupService {
         validationService.validate(request);
 
         if(groupRepository.existsByNameAndUser(request.getName(), user)){
-            List<String> messages = new ArrayList<>();
-            messages.add("already registered");
-            throw new CustomException(HttpStatus.BAD_REQUEST, "name", messages);
+//            List<String> messages = new ArrayList<>();
+//            messages.add("already registered");
+//            throw new CustomException(HttpStatus.BAD_REQUEST, "name", messages);
+            throw new CustomException(HttpStatus.BAD_REQUEST, "name", "already registered");
         }
 
         Group group = new Group();
@@ -63,9 +64,10 @@ public class GroupServiceImpl implements GroupService {
         validationService.validate(request);
 
         if(groupRepository.existsByNameAndUserAndIdNot(request.getName(), user, id)){
-            List<String> messages = new ArrayList<>();
-            messages.add("already registered");
-            throw new CustomException(HttpStatus.BAD_REQUEST, "name", messages);
+//            List<String> messages = new ArrayList<>();
+//            messages.add("already registered");
+//            throw new CustomException(HttpStatus.BAD_REQUEST, "name", messages);
+            throw new CustomException(HttpStatus.BAD_REQUEST, "name", "already registered");
         }
 
         Group group = groupRepository.findFirstByIdAndUser(id, user)

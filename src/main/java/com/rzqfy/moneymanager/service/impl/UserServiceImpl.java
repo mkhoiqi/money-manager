@@ -36,9 +36,10 @@ public class UserServiceImpl implements UserService {
         validationService.validate(request);
 
         if(userRepository.existsById(request.getUsername())){
-            List<String> messages = new ArrayList<>();
-            messages.add("already registered");
-            throw new CustomException(HttpStatus.BAD_REQUEST, "username", messages);
+//            List<String> messages = new ArrayList<>();
+//            messages.add("already registered");
+//            throw new CustomException(HttpStatus.BAD_REQUEST, "username", messages);
+            throw new CustomException(HttpStatus.BAD_REQUEST, "username", "already registered");
         }
 
         User user = new User();

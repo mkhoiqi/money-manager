@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,23 +42,26 @@ public class TransactionServiceImpl implements TransactionService {
         validationService.validate(request);
 
         if(!request.getType().equalsIgnoreCase("income") && !request.getType().equalsIgnoreCase("expense")){
-            List<String> messages = new ArrayList<>();
-            messages.add("must be 'expense' or 'income'");
-            throw new CustomException(HttpStatus.BAD_REQUEST, "type", messages);
+//            List<String> messages = new ArrayList<>();
+//            messages.add("must be 'expense' or 'income'");
+//            throw new CustomException(HttpStatus.BAD_REQUEST, "type", messages);
+            throw new CustomException(HttpStatus.BAD_REQUEST, "type", "must be 'expense' or 'income'");
         }
 
         Account account = accountRepository.findFirstByUserAndAccountIdAndDeletedAtIsNull(user, request.getAccountId())
                 .orElseThrow(() -> {
-                    List<String> messages = new ArrayList<>();
-                    messages.add("not found");
-                    throw new CustomException(HttpStatus.BAD_REQUEST, "account_id", messages);
+//                    List<String> messages = new ArrayList<>();
+//                    messages.add("not found");
+//                    throw new CustomException(HttpStatus.NOT_FOUND, "account_id", messages);
+                    throw new CustomException(HttpStatus.NOT_FOUND, "account_id", "not found");
                 });
 
         Category category = categoryRepository.findFirstByIdAndUserAndTypeAndDeletedAtIsNull(request.getCategoryId(), user, request.getType())
                 .orElseThrow(()->{
-                    List<String> messages = new ArrayList<>();
-                    messages.add("not found");
-                    throw new CustomException(HttpStatus.BAD_REQUEST, "category_id", messages);
+//                    List<String> messages = new ArrayList<>();
+//                    messages.add("not found");
+//                    throw new CustomException(HttpStatus.NOT_FOUND, "category_id", messages);
+                    throw new CustomException(HttpStatus.NOT_FOUND, "category_id", "not found");
                 });
 
         Transaction transaction = new Transaction();
@@ -97,27 +100,31 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional
     public TransactionCreateResponse update(User user, TransactionCreateRequest request, String id) {
         validationService.validate(request);
 
         if(!request.getType().equalsIgnoreCase("income") && !request.getType().equalsIgnoreCase("expense")){
-            List<String> messages = new ArrayList<>();
-            messages.add("must be 'expense' or 'income'");
-            throw new CustomException(HttpStatus.BAD_REQUEST, "type", messages);
+//            List<String> messages = new ArrayList<>();
+//            messages.add("must be 'expense' or 'income'");
+//            throw new CustomException(HttpStatus.BAD_REQUEST, "type", messages);
+            throw new CustomException(HttpStatus.BAD_REQUEST, "type", "must be 'expense' or 'income'");
         }
 
         Account account = accountRepository.findFirstByUserAndAccountIdAndDeletedAtIsNull(user, request.getAccountId())
                 .orElseThrow(() -> {
-                    List<String> messages = new ArrayList<>();
-                    messages.add("not found");
-                    throw new CustomException(HttpStatus.BAD_REQUEST, "account_id", messages);
+//                    List<String> messages = new ArrayList<>();
+//                    messages.add("not found");
+//                    throw new CustomException(HttpStatus.NOT_FOUND, "account_id", messages);
+                    throw new CustomException(HttpStatus.NOT_FOUND, "account_id", "not found");
                 });
 
         Category category = categoryRepository.findFirstByIdAndUserAndTypeAndDeletedAtIsNull(request.getCategoryId(), user, request.getType())
                 .orElseThrow(()->{
-                    List<String> messages = new ArrayList<>();
-                    messages.add("not found");
-                    throw new CustomException(HttpStatus.BAD_REQUEST, "category_id", messages);
+//                    List<String> messages = new ArrayList<>();
+//                    messages.add("not found");
+//                    throw new CustomException(HttpStatus.NOT_FOUND, "category_id", messages);
+                    throw new CustomException(HttpStatus.NOT_FOUND, "category_id", "not found");
                 });
 
         Transaction transaction = transactionRepository.findById(id)
@@ -167,6 +174,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional
     public String delete(User user, String id) {
         Transaction transaction = transactionRepository.findByIdAndUser(user, id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found"));
@@ -178,6 +186,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<TransactionGetAllResponse> getAll(User user, String accountQueryParam) {
         List<Transaction> transactions = transactionRepository.findAllByUserAndFilter(user, accountQueryParam);
 
@@ -191,6 +200,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TransactionGetDetailResponse get(User user, String id) {
         Transaction transaction = transactionRepository.findByIdAndUser(user, id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found"));

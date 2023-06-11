@@ -46,15 +46,17 @@ public class AccountServiceImpl implements AccountService {
 
         Group group = groupRepository.findFirstByIdAndUserAndDeletedAtIsNull(groupId, user)
                 .orElseThrow(() -> {
-                    List<String> messages = new ArrayList<>();
-                    messages.add("not found");
-                    throw new CustomException(HttpStatus.BAD_REQUEST, "group_id", messages);
+//                    List<String> messages = new ArrayList<>();
+//                    messages.add("not found");
+//                    throw new CustomException(HttpStatus.NOT_FOUND, "group_id", messages);
+                    throw new CustomException(HttpStatus.NOT_FOUND, "group_id", "not found");
                 });
 
         if(accountRepository.existsByUser(user, request.getName())){
-            List<String> messages = new ArrayList<>();
-            messages.add("already exists");
-            throw new CustomException(HttpStatus.BAD_REQUEST, "name", messages);
+//            List<String> messages = new ArrayList<>();
+//            messages.add("already exists");
+//            throw new CustomException(HttpStatus.BAD_REQUEST, "name", messages);
+            throw new CustomException(HttpStatus.BAD_REQUEST, "name", "already exists");
         }
 
         Account account = new Account();
@@ -90,15 +92,17 @@ public class AccountServiceImpl implements AccountService {
 
         Group newGroup = groupRepository.findFirstByIdAndUserAndDeletedAtIsNull(request.getGroupId(), user)
                 .orElseThrow(() -> {
-                    List<String> messages = new ArrayList<>();
-                    messages.add("not found");
-                    throw new CustomException(HttpStatus.BAD_REQUEST, "group_id", messages);
+//                    List<String> messages = new ArrayList<>();
+//                    messages.add("not found");
+//                    throw new CustomException(HttpStatus.NOT_FOUND, "group_id", messages);
+                    throw new CustomException(HttpStatus.NOT_FOUND, "group_id", "not found");
                 });
 
         if(accountRepository.existsByUserAndAccountId(user, id, request.getName())){
-            List<String> messages = new ArrayList<>();
-            messages.add("already exists");
-            throw new CustomException(HttpStatus.BAD_REQUEST, "name", messages);
+//            List<String> messages = new ArrayList<>();
+//            messages.add("already exists");
+//            throw new CustomException(HttpStatus.BAD_REQUEST, "name", messages);
+            throw new CustomException(HttpStatus.BAD_REQUEST, "name", "already exists");
         }
 
         account.setName(request.getName());

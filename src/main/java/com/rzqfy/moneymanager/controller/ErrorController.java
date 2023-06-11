@@ -45,12 +45,21 @@ public class ErrorController {
     }
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<WebResponse<Map<String, List<String>>>>customException(CustomException e){
-        Map<String, List<String>> err = new HashMap<>();
-        err.put(e.getField(), e.getMessages());
+//    public ResponseEntity<WebResponse<Map<String, List<String>>>>customException(CustomException e){
+//        Map<String, List<String>> err = new HashMap<>();
+//        err.put(e.getField(), e.getMessages());
+//
+//        return ResponseEntity.status(e.getStatus())
+//                .body(WebResponse.<Map<String, List<String>>>builder()
+//                        .errors(err)
+//                        .build());
+//    }
+    public ResponseEntity<WebResponse<Map<String, String>>>customException(CustomException e){
+        Map<String, String> err = new HashMap<>();
+        err.put(e.getField(), e.getMessage());
 
         return ResponseEntity.status(e.getStatus())
-                .body(WebResponse.<Map<String, List<String>>>builder()
+                .body(WebResponse.<Map<String, String>>builder()
                         .errors(err)
                         .build());
     }
